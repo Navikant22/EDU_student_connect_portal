@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EduConnect — Student Portal (Demo)</title>
+    <style>
+        :root {
+            --accent: #7c3aed;
+            /* purple */
+            --muted: #9aa4b2;
+            --card: #0f1720;
+            --glass: rgba(255, 255, 255, 0.04);
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+            background: linear-gradient(180deg, #000000 0%, #0b0b0b 100%);
+            color: #e6eef8;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 32px auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px
+        }
+
+        .brand {
+            display: flex;
+            gap: 14px;
+            align-items: center
+        }
+
+        .logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            font-size: 20px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6)
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 20px
+        }
+
+        p.lead {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* layout */
+        .main {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px
+        }
+
+        /* left: login & register card */
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 6px 30px rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03)
+        }
+
+        .small {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px
+        }
+
+        input,
+        button,
+        select,
+        textarea {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: inherit;
+            font-size: 14px
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 6px 18px rgba(124, 58, 237, 0.12)
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--accent), #06b6d4);
+            border: none;
+            color: #021025;
+            padding: 10px 12px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--muted)
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* courses area */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px
+        }
+
+        .search {
+            flex: 1;
+            margin-right: 12px
+        }
+
+        .search input {
+            width: 100%
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 18px
+        }
+
+        .course {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform .16s ease, box-shadow .16s
+        }
+
+        .course:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 40px rgba(2, 6, 23, 0.6)
+        }
+
+        .thumb {
+            height: 120px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #111827, #0b1220);
+            border: 1px solid rgba(255, 255, 255, 0.03)
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .cmeta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .title {
+            font-weight: 600
+        }
+
+        .tag {
+            font-size: 12px;
+            padding: 6px 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--muted)
+        }
+
+        /* detail panel */
+        .detail {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.75));
+            z-index: 120
+        }
+
+        .detail.show {
+            display: flex
+        }
+
+        .detail-card {
+            width: min(980px, 95%);
+            background: linear-gradient(180deg, #071122, #07121a);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 30px 70px rgba(2, 6, 23, 0.7);
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 18px
+        }
+
+        .detail-card h2 {
+            margin: 0
+        }
+
+        .close {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 8px;
+            border-radius: 10px;
+            color: var(--muted);
+            cursor: pointer
+        }
+
+        .enroll {
+            margin-top: 12px
+        }
+
+        .meta-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .meta-item {
+            background: var(--glass);
+            padding: 10px;
+            border-radius: 10px;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* responsive */
+        @media (max-width:880px) {
+            .main {
+                grid-template-columns: 1fr
+            }
+
+            .detail-card {
+                grid-template-columns: 1fr
+            }
+
+            .container {
+                padding: 12px
+            }
+        }
+
+        footer {
+            margin-top: 22px;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div class="logo">EC</div>
+                <div>
+                    <h1>EduConnect <small style="color:var(--muted);font-weight:500;display:block">Student Portal —
+                            Demo</small></h1>
+                </div>
+            </div>
+            <div class="small">Build: Student login → Courses → Course details</div>
+        </header>
+
+        <div class="main">
+            <!-- LEFT: Login/Register -->
+            <div>
+                <div class="card">
+                    <h3 style="margin:0 0 8px 0">Student Login</h3>
+                    <p class="small">Sign in to access your courses. If you are new, register below.</p>
+
+                    <form id="loginForm">
+                        <input id="loginEmail" type="email" placeholder="Email" required />
+                        <input id="loginPass" type="password" placeholder="Password" required minlength="4" />
+                        <button class="btn" type="submit">Login</button>
+                        <button type="button" class="btn ghost" id="demoLogin">Demo Login</button>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                            <span class="muted">Don't have account?</span>
+                            <button id="openReg" type="button" class="btn ghost">Register</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div style="height:18px"></div>
+
+                <div class="card">
+                    <h3 style="margin:0 0 8px 0">Register Student</h3>
+                    <form id="regForm">
+                        <input id="rname" type="text" placeholder="Full name" required />
+                        <input id="remail" type="email" placeholder="Email" required />
+                        <input id="rpass" type="password" placeholder="Password (min 4)" required minlength="4" />
+                        <select id="courseSelect">
+                            <option value="">Interested Course</option>
+                            <option>Web Development</option>
+                            <option>Data Science</option>
+                            <option>Graphic Design</option>
+                            <option>Digital Marketing</option>
+                        </select>
+                        <button class="btn" type="submit">Register</button>
+                    </form>
+                    <p class="small" style="margin-top:10px">Registration includes simple front-end validation. This
+                        demo stores data in memory only.</p>
+                </div>
+            </div>
+
+            <!-- RIGHT: Courses list -->
+            <div>
+                <div class="card">
+                    <div class="toolbar">
+                        <div style="display:flex;gap:12px;align-items:center;flex:1">
+                            <div class="search" style="flex:1"><input id="search" placeholder="Search courses..." />
+                            </div>
+                            <div class="small muted">Filter</div>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:center">
+                            <div class="tag">4 Courses</div>
+                        </div>
+                    </div>
+
+                    <div class="grid" id="coursesGrid">
+                        <!-- JS will populate course cards -->
+                    </div>
+                </div>
+
+                <footer>EduConnect — Demo Student Portal • Black theme • Rich card design</footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course detail overlay -->
+    <div class="detail" id="detailPanel">
+        <div class="detail-card" role="dialog" aria-modal="true">
+            <div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <h2 id="detailTitle">Course Title</h2>
+                    <button class="close" id="closeDetail">Close</button>
+                </div>
+                <p id="detailDesc" class="small" style="margin-top:6px;line-height:1.5"></p>
+
+                <h3 style="margin-top:12px">What you will learn</h3>
+                <ul id="detailTopics" style="margin:8px 0 0 18px;color:var(--muted)"></ul>
+
+                <div style="margin-top:12px">
+                    <button class="btn enroll" id="enrollBtn">Enroll / Mark as Started</button>
+                </div>
+            </div>
+
+            <aside>
+                <div class="meta-list">
+                    <div class="meta-item"><strong>Duration:</strong> <span id="detailDur"
+                            style="float:right;color:#dbeafe">4 weeks</span></div>
+                    <div class="meta-item"><strong>Level:</strong> <span id="detailLevel"
+                            style="float:right;color:#dbeafe">Beginner</span></div>
+                    <div class="meta-item"><strong>Lectures:</strong> <span id="detailLect"
+                            style="float:right;color:#dbeafe">24</span></div>
+                    <div class="meta-item"><strong>Instructor:</strong> <span id="detailInst"
+                            style="float:right;color:#dbeafe">Team EduConnect</span></div>
+                </div>
+
+                <div style="height:18px"></div>
+                <div style="background:linear-gradient(135deg,#071025, #061023);padding:12px;border-radius:10px">
+                    <div class="small muted">Course Preview</div>
+                    <div
+                        style="height:120px;border-radius:8px;margin-top:8px;background:linear-gradient(90deg,#0b1220,#09101a);display:flex;align-items:center;justify-content:center;color:var(--muted)">
+                        Image / Video</div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        // Demo course data
+        const courses = [
+            { id: 1, title: 'Web Development for Beginners', tag: 'Web Dev', desc: 'Learn HTML, CSS and JavaScript to build modern websites.', topics: ['HTML & CSS basics', 'Responsive design', 'JavaScript fundamentals', 'Project: Personal website'], duration: '6 weeks', level: 'Beginner', lectures: 28, instructor: 'Mr. A. Sharma' },
+            { id: 2, title: 'Introduction to Data Science', tag: 'Data', desc: 'Basics of data science, Python, and data visualization.', topics: ['Python basics', 'Pandas & NumPy', 'Data visualization', 'Mini projects'], duration: '8 weeks', level: 'Intermediate', lectures: 32, instructor: 'Ms. R. Verma' },
+            { id: 3, title: 'Graphic Design Essentials', tag: 'Design', desc: 'Design fundamentals using free tools and basics of UI.', topics: ['Design theory', 'Figma basics', 'Logo design', 'Portfolio tips'], duration: '4 weeks', level: 'Beginner', lectures: 16, instructor: 'Design Team' },
+            { id: 4, title: 'Digital Marketing 101', tag: 'Marketing', desc: 'Learn digital strategies to grow online presence.', topics: ['SEO basics', 'Social media marketing', 'Email campaigns', 'Analytics'], duration: '5 weeks', level: 'Beginner', lectures: 20, instructor: 'Marketing Dept.' }
+        ];
+
+        const grid = document.getElementById('coursesGrid');
+        const detailPanel = document.getElementById('detailPanel');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailDesc = document.getElementById('detailDesc');
+        const detailTopics = document.getElementById('detailTopics');
+        const detailDur = document.getElementById('detailDur');
+        const detailLevel = document.getElementById('detailLevel');
+        const detailLect = document.getElementById('detailLect');
+        const detailInst = document.getElementById('detailInst');
+
+        function renderCourses(list) {
+            grid.innerHTML = '';
+            list.forEach(c => {
+                const el = document.createElement('div'); el.className = 'course'; el.tabIndex = 0;
+                el.innerHTML = `
+          <div class="thumb">
+            <div style="text-align:center;padding:8px;color:var(--muted)"><strong style="color:#dbeafe">${c.title.split(' ').slice(0, 3).join(' ')}...</strong></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="title">${c.title}</div>
+              <div class="small muted" style="margin-top:6px">${c.desc}</div>
+            </div>
+            <div class="tag">${c.tag}</div>
+          </div>
+        `;
+                el.addEventListener('click', () => openDetail(c));
+                grid.appendChild(el);
+            });
+        }
+
+        function openDetail(c) {
+            detailTitle.textContent = c.title;
+            detailDesc.textContent = c.desc;
+            detailTopics.innerHTML = '';
+            c.topics.forEach(t => { const li = document.createElement('li'); li.textContent = t; detailTopics.appendChild(li) });
+            detailDur.textContent = c.duration;
+            detailLevel.textContent = c.level;
+            detailLect.textContent = c.lectures;
+            detailInst.textContent = c.instructor;
+            detailPanel.classList.add('show');
+        }
+
+        document.getElementById('closeDetail').addEventListener('click', () => detailPanel.classList.remove('show'));
+        detailPanel.addEventListener('click', (e) => { if (e.target === detailPanel) detailPanel.classList.remove('show') });
+
+        // Search
+        document.getElementById('search').addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase().trim();
+            renderCourses(courses.filter(c => c.title.toLowerCase().includes(q) || c.tag.toLowerCase().includes(q)));
+        });
+
+        // Demo login (simple in-memory)
+        let currentUser = null;
+        const demoUser = { name: 'Demo Student', email: 'demo@edu.com' };
+        document.getElementById('demoLogin').addEventListener('click', () => {
+            currentUser = demoUser; alert('Logged in as demo student (demo@edu.com)');
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', (ev) => {
+            ev.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            if (!email || !pass) { alert('Fill email and password'); return }
+            // In real project: check server. For demo we accept any values.
+            currentUser = { email }; alert('Login successful: ' + email);
+        });
+
+        document.getElementById('regForm').addEventListener('submit', (ev) => {
+            ev.preventDefault();
+            const name = document.getElementById('rname').value.trim();
+            const email = document.getElementById('remail').value.trim();
+            const pass = document.getElementById('rpass').value.trim();
+            if (!name || !email || pass.length < 4) { alert('Please fill form correctly'); return }
+            // demo store in localStorage
+            localStorage.setItem('edu_user', JSON.stringify({ name, email }));
+            alert('Registration successful. You can now login.');
+        });
+
+        document.getElementById('openReg').addEventListener('click', () => {
+            window.scrollTo({ top: 600, behavior: 'smooth' });
+            document.getElementById('rname').focus();
+        });
+
+        document.getElementById('enrollBtn').addEventListener('click', () => {
+            if (!currentUser) { alert('Please login to enroll.'); return }
+            alert(currentUser.email + ' — Enrolled / Started');
+            detailPanel.classList.remove('show');
+        });
+
+        // initial render
+        renderCourses(courses);
+    </script>
+</body>
+
+</html>
